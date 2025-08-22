@@ -1,0 +1,8 @@
+/* Button text rendering fix */
+.fixed-btn .btn-text {
+  font-family: Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.2px;
+}

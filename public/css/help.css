@@ -1,0 +1,228 @@
+/* Help Module Styles */
+
+:root {
+  --help-primary: #3b82f6;
+  --help-secondary: #4ade80;
+  --help-accent: #f59e0b;
+  --help-light: #f8fafc;
+  --help-dark: #1e293b;
+  --help-success: #10b981;
+  --help-warning: #f59e0b;
+  --help-danger: #ef4444;
+  --help-gray: #64748b;
+}
+
+/* Common Help Module Styles */
+.help-page {
+  padding: 40px 0;
+  background-color: var(--help-light);
+  min-height: calc(100vh - 70px);
+  animation: fadeInPage 0.4s ease;
+}
+
+.help-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.help-title {
+  font-size: 28px;
+  color: var(--help-dark);
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.section-title {
+  font-size: 22px;
+  color: var(--help-dark);
+  margin-bottom: 15px;
+  font-weight: 600;
+  border-bottom: 2px solid var(--help-primary);
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+.help-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 25px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.help-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.request-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--help-dark);
+  margin-bottom: 10px;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: var(--help-primary);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.helper-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 2px solid var(--help-secondary);
+}
+
+.helper-title {
+  font-size: 14px;
+  color: var(--help-dark);
+  font-weight: 500;
+}
+
+/* Form styles */
+.form-section-title {
+  font-size: 20px;
+  color: var(--help-dark);
+  margin-bottom: 20px;
+  margin-top: 30px;
+  font-weight: 600;
+}
+
+.skill-option {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+
+.skill-checkbox {
+  display: none;
+}
+
+.skill-label {
+  display: inline-block;
+  padding: 8px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.skill-checkbox:checked + .skill-label {
+  border-color: var(--help-primary);
+  background-color: var(--help-primary);
+  color: white;
+}
+
+/* Profile page styles */
+.profile-section-title {
+  font-size: 20px;
+  color: var(--help-dark);
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 10px;
+}
+
+.verification-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.profile-stat {
+  text-align: center;
+  padding: 15px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--help-primary);
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--help-gray);
+}
+
+/* Leaderboard styles */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.leaderboard-table th, 
+.leaderboard-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.leaderboard-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+}
+
+.leaderboard-rank {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--help-dark);
+  width: 50px;
+  text-align: center;
+}
+
+.top-helper {
+  background-color: #fef3c7;
+}
+
+.top-badge {
+  width: 40px;
+  height: 40px;
+}
+
+.your-rank-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--help-primary);
+  margin-bottom: 15px;
+  background-color: #e0f2fe;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .help-title {
+    font-size: 24px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .help-card {
+    padding: 15px;
+  }
+  
+  .leaderboard-table th, 
+  .leaderboard-table td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}

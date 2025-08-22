@@ -1,0 +1,514 @@
+@extends('layouts.app')
+
+@section('content')
+<main class="events-page">
+  <!-- Navigation/Header -->
+  <div class="event-header-section">
+    <div class="container">
+      <div class="page-header">
+        <h1>Community Events</h1>
+      </div>
+      
+      @if(session('success'))
+        <div class="alert-message alert-success">
+          {{ session('success') }}
+        </div>
+      @endif
+      
+      @if(session('error'))
+        <div class="alert-message alert-danger">
+          {{ session('error') }}
+        </div>
+      @endif
+      
+      <!-- Enhanced Search Bar with Filters -->
+      <div class="enhanced-search-container">
+        <div class="search-bar-wrapper">
+          <input type="text" placeholder="Search events..." class="search-input" id="searchEvents">
+          <button class="search-toggle"><i class="fas fa-search"></i></button>
+          <div class="expanded-filters">
+            <div class="filter-group">
+              <label>Date Range</label>
+              <div class="date-inputs">
+                <input type="date" placeholder="From" class="date-input">
+                <input type="date" placeholder="To" class="date-input">
+              </div>
+            </div>
+            <div class="filter-group">
+              <label>Category</label>
+              <select class="category-select">
+                <option value="">All Categories</option>
+                <option value="Social">Social</option>
+                <option value="Sports">Sports</option>
+                <option value="Education">Education</option>
+                <option value="Arts">Arts</option>
+                <option value="Community">Community</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Distance</label>
+              <select class="distance-select">
+                <option value="">Any Distance</option>
+                <option value="1">1 mile</option>
+                <option value="5">5 miles</option>
+                <option value="10">10 miles</option>
+                <option value="25">25 miles</option>
+              </select>
+            </div>
+            <button class="btn btn-primary apply-filters">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Trending Events Section -->
+    <section class="trending-events-section">
+      <div class="section-header">
+        <h2>Trending Events</h2>
+        <a href="#" class="see-all-link">See All</a>
+      </div>
+      <div class="trending-events-carousel">
+        <!-- Horizontally scrollable carousel -->
+        <div class="trending-events-container">
+          @foreach($events->take(5) as $event)
+            <div class="trending-event-card">
+              <div class="event-image">
+                @if($event->image_path)
+                  <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}">
+                @else
+                  <div class="placeholder-image">
+                    <i class="fas fa-calendar-alt"></i>
+                  </div>
+                @endif
+                <div class="category-tag category-{{ strtolower(str_replace(' ', '-', $event->category)) }}">
+                  {{ $event->category }}
+                </div>
+              </div>
+              <div class="event-info">
+                <div class="event-date-badge">
+                  <span class="date-day">{{ \Carbon\Carbon::parse($event->start_date)->format('d') }}</span>
+                  <span class="date-month">{{ \Carbon\Carbon::parse($event->start_date)->format('M') }}</span>
+                </div>
+                <h3 class="event-title">{{ $event->title }}</h3>
+                <div class="event-meta">
+                  <span class="event-time"><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('g:ia') }}</span>
+                  <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ Str::limit($event->location, 20) }}</span>
+                </div>
+                <div class="event-attendees">
+                  <span class="attendee-count"><i class="fas fa-user-friends"></i> {{ $event->attendees_count ?? rand(5, 20) }} attending</span>
+                </div>
+              </div>
+            </div>
+          @endforeach
+        </div>
+        <button class="carousel-control prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-control next"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <!-- Main Events Grid with Collapsible Sidebar -->
+    <div class="events-layout">
+      <!-- Sidebar with Collapsible Filters -->
+      <div class="events-sidebar">
+        <div class="sidebar-header">
+          <h3>Filters</h3>
+          <button class="toggle-sidebar"><i class="fas fa-sliders-h"></i></button>
+        </div>
+        <div class="sidebar-content">
+          <div class="filter-group collapsible">
+            <div class="filter-header">
+              <h4>Time Period</h4>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="filter-options">
+              <button class="filter-btn active" data-filter="upcoming">All Upcoming</button>
+              <button class="filter-btn" data-filter="today">Today</button>
+              <button class="filter-btn" data-filter="this-week">This Week</button>
+              <button class="filter-btn" data-filter="this-month">This Month</button>
+              <button class="filter-btn" data-filter="my-events">My Events</button>
+            </div>
+          </div>
+          
+          <div class="filter-group collapsible">
+            <div class="filter-header">
+              <h4>Categories</h4>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="filter-options">
+              <label class="checkbox-container">
+                <input type="checkbox" checked> All Categories
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox"> Social
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox"> Sports
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox"> Education
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox"> Arts
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox"> Community
+                <span class="checkmark"></span>
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox"> Other
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Events Grid -->
+      <div class="events-content">
+        <!-- Date Headers with Events -->
+        @php
+          $currentDate = null;
+        @endphp
+        
+        @forelse($events as $event)
+          @php
+            $eventDate = \Carbon\Carbon::parse($event->start_date)->format('Y-m-d');
+          @endphp
+          
+          @if($currentDate !== $eventDate)
+            @php 
+              $currentDate = $eventDate;
+              $displayDate = \Carbon\Carbon::parse($event->start_date);
+            @endphp
+            
+            <div class="date-header">
+              <h2>
+                @if($displayDate->isToday())
+                  Today
+                @elseif($displayDate->isTomorrow())
+                  Tomorrow
+                @elseif($displayDate->isCurrentWeek())
+                  {{ $displayDate->format('l') }}
+                @else
+                  {{ $displayDate->format('l, F j') }}
+                @endif
+              </h2>
+            </div>
+          @endif
+          
+          <!-- Event Card -->
+          <div class="event-card" data-event-id="{{ $event->id }}">
+            <div class="event-image">
+              @if($event->image_path)
+                <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}">
+              @else
+                <div class="placeholder-image">
+                  <i class="fas fa-calendar-alt"></i>
+                </div>
+              @endif
+              <div class="category-tag category-{{ strtolower(str_replace(' ', '-', $event->category)) }}">
+                {{ $event->category }}
+              </div>
+            </div>
+            
+            <div class="event-content">
+              <div class="event-date-badge">
+                <span class="date-day">{{ \Carbon\Carbon::parse($event->start_date)->format('d') }}</span>
+                <span class="date-month">{{ \Carbon\Carbon::parse($event->start_date)->format('M') }}</span>
+              </div>
+              
+              <div class="event-info">
+                <h3 class="event-title"><a href="{{ route('events.show', $event) }}">{{ $event->title }}</a></h3>
+                
+                <div class="event-time-location">
+                  <div><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('g:ia') }} - 
+                  {{ $event->end_time ? \Carbon\Carbon::parse($event->end_time)->format('g:ia') : 'TBD' }}</div>
+                  <div><i class="fas fa-map-marker-alt"></i> {{ $event->location }}</div>
+                </div>
+                
+                <div class="event-organizer">
+                  <img src="{{ user_avatar($event->user) }}" alt="{{ $event->user->name }}" class="avatar-sm">
+                  <span>{{ $event->user->name }}</span>
+                </div>
+                
+                <div class="event-actions">
+                  <button class="action-btn join-btn" data-event="{{ $event->id }}">
+                    <i class="fas fa-user-plus"></i> Join
+                  </button>
+                  <button class="action-btn save-btn" data-event="{{ $event->id }}">
+                    <i class="far fa-bookmark"></i>
+                  </button>
+                  <button class="action-btn share-btn" data-event="{{ $event->id }}">
+                    <i class="fas fa-share-alt"></i>
+                  </button>
+                  <div class="attendees-count">
+                    <i class="fas fa-user-friends"></i>
+                    <span>{{ $event->attendees_count ?? rand(5, 20) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Similar Events (collapsed by default) -->
+            <div class="similar-events-section">
+              <div class="similar-header">
+                <h4>Similar Events</h4>
+                <button class="toggle-similar"><i class="fas fa-chevron-down"></i></button>
+              </div>
+              <div class="similar-events-container">
+                <!-- Similar events would be populated here -->
+                <div class="similar-event-card">
+                  <div class="similar-event-date">Aug 25</div>
+                  <div class="similar-event-info">
+                    <h5>Related {{ $event->category }} Event</h5>
+                    <span><i class="fas fa-map-marker-alt"></i> Nearby Location</span>
+                  </div>
+                </div>
+                <div class="similar-event-card">
+                  <div class="similar-event-date">Sep 03</div>
+                  <div class="similar-event-info">
+                    <h5>Another {{ $event->category }} Event</h5>
+                    <span><i class="fas fa-map-marker-alt"></i> Community Center</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        @empty
+          <div class="no-events">
+            <div class="empty-state">
+              <i class="fas fa-calendar-times"></i>
+              <h3>No events found</h3>
+              <p>There are no upcoming events that match your criteria.</p>
+              <a href="{{ route('events.create') }}" class="btn btn-primary">Create an Event</a>
+            </div>
+          </div>
+        @endforelse
+      </div>
+    </div>
+    
+    <div class="pagination">
+      {{ $events->links() }}
+    </div>
+  </div>
+  
+  <!-- Floating Action Button -->
+  <div class="floating-action-button">
+    <a href="{{ route('events.create') }}" class="fab-button">
+      <i class="fas fa-plus"></i>
+    </a>
+    <span class="fab-tooltip">Create Event</span>
+  </div>
+
+  <!-- RSVP Modal -->
+  <div class="rsvp-modal" id="rsvpModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>RSVP to Event</h3>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="event-summary">
+          <h4 id="modalEventTitle">Event Title</h4>
+          <div class="event-details-summary">
+            <div><i class="far fa-calendar"></i> <span id="modalEventDate">Date</span></div>
+            <div><i class="far fa-clock"></i> <span id="modalEventTime">Time</span></div>
+            <div><i class="fas fa-map-marker-alt"></i> <span id="modalEventLocation">Location</span></div>
+          </div>
+        </div>
+        <div class="rsvp-options">
+          <form id="rsvpForm" method="POST" action="">
+            @csrf
+            <button type="button" class="rsvp-option-btn going" data-status="going">
+              <i class="fas fa-check-circle"></i>
+              <span>Going</span>
+            </button>
+            <button type="button" class="rsvp-option-btn maybe" data-status="maybe">
+              <i class="fas fa-question-circle"></i>
+              <span>Maybe</span>
+            </button>
+            <button type="button" class="rsvp-option-btn not-going" data-status="not-going">
+              <i class="fas fa-times-circle"></i>
+              <span>Not Going</span>
+            </button>
+            <input type="hidden" name="status" id="rsvpStatus">
+            <input type="hidden" name="event_id" id="eventId">
+            <button type="submit" class="btn btn-primary btn-block mt-3">Submit RSVP</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+@include('layouts.footer')
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Filter buttons functionality
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active class from all buttons
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      
+      // Add active class to clicked button
+      this.classList.add('active');
+      
+      // Filter events based on data-filter attribute
+      const filterValue = this.getAttribute('data-filter');
+      // Implementation would filter the events based on the selection
+    });
+  });
+  
+  // Collapsible sidebar sections
+  document.querySelectorAll('.filter-header').forEach(header => {
+    header.addEventListener('click', function() {
+      const parent = this.parentElement;
+      parent.classList.toggle('collapsed');
+      
+      // Toggle chevron icon
+      const icon = this.querySelector('i');
+      icon.classList.toggle('fa-chevron-down');
+      icon.classList.toggle('fa-chevron-right');
+    });
+  });
+  
+  // Search bar expansion
+  const searchToggle = document.querySelector('.search-toggle');
+  const expandedFilters = document.querySelector('.expanded-filters');
+  
+  searchToggle.addEventListener('click', function() {
+    expandedFilters.classList.toggle('show');
+  });
+  
+  // Toggle similar events visibility
+  document.querySelectorAll('.toggle-similar').forEach(button => {
+    button.addEventListener('click', function() {
+      const section = this.closest('.similar-events-section');
+      section.classList.toggle('expanded');
+      
+      // Toggle icon
+      const icon = this.querySelector('i');
+      icon.classList.toggle('fa-chevron-down');
+      icon.classList.toggle('fa-chevron-up');
+    });
+  });
+  
+  // Join button (RSVP modal)
+  const joinButtons = document.querySelectorAll('.join-btn');
+  const rsvpModal = document.getElementById('rsvpModal');
+  const closeModal = document.querySelector('.close-modal');
+  
+  joinButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const eventId = this.getAttribute('data-event');
+      const eventCard = document.querySelector(`.event-card[data-event-id="${eventId}"]`);
+      
+      // Get event details for the modal
+      const title = eventCard.querySelector('.event-title').textContent;
+      const date = eventCard.querySelector('.event-date-badge').textContent.trim();
+      const time = eventCard.querySelector('.event-time-location div:first-child').textContent.trim();
+      const location = eventCard.querySelector('.event-time-location div:last-child').textContent.trim();
+      
+      // Populate modal
+      document.getElementById('modalEventTitle').textContent = title;
+      document.getElementById('modalEventDate').textContent = date;
+      document.getElementById('modalEventTime').textContent = time;
+      document.getElementById('modalEventLocation').textContent = location;
+      document.getElementById('eventId').value = eventId;
+      
+      // Show modal
+      rsvpModal.classList.add('show');
+    });
+  });
+  
+  closeModal.addEventListener('click', function() {
+    rsvpModal.classList.remove('show');
+  });
+  
+  // RSVP option selection
+  const rsvpOptions = document.querySelectorAll('.rsvp-option-btn');
+  
+  rsvpOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      // Remove active class from all options
+      rsvpOptions.forEach(opt => opt.classList.remove('active'));
+      
+      // Add active class to selected option
+      this.classList.add('active');
+      
+      // Set hidden input value
+      document.getElementById('rsvpStatus').value = this.getAttribute('data-status');
+    });
+  });
+  
+  // Toggle sidebar on mobile
+  const toggleSidebar = document.querySelector('.toggle-sidebar');
+  
+  toggleSidebar.addEventListener('click', function() {
+    const sidebar = document.querySelector('.events-sidebar');
+    sidebar.classList.toggle('mobile-expanded');
+  });
+  
+  // Trending events carousel
+  const carousel = document.querySelector('.trending-events-container');
+  const prevBtn = document.querySelector('.carousel-control.prev');
+  const nextBtn = document.querySelector('.carousel-control.next');
+  
+  prevBtn.addEventListener('click', function() {
+    carousel.scrollBy({left: -300, behavior: 'smooth'});
+  });
+  
+  nextBtn.addEventListener('click', function() {
+    carousel.scrollBy({left: 300, behavior: 'smooth'});
+  });
+  
+  // Save/Bookmark toggle
+  document.querySelectorAll('.save-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.classList.toggle('saved');
+      const icon = this.querySelector('i');
+      
+      if (this.classList.contains('saved')) {
+        icon.classList.remove('far', 'fa-bookmark');
+        icon.classList.add('fas', 'fa-bookmark');
+      } else {
+        icon.classList.remove('fas', 'fa-bookmark');
+        icon.classList.add('far', 'fa-bookmark');
+      }
+    });
+  });
+  
+  // Share functionality
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const eventId = this.getAttribute('data-event');
+      const url = window.location.origin + '/events/' + eventId;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Check out this event!',
+          url: url
+        });
+      } else {
+        // Fallback - copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+          alert('Event link copied to clipboard!');
+        });
+      }
+    });
+  });
+});
+</script>
+@endsection
